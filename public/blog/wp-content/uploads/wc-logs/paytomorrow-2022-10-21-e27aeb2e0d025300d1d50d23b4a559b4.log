@@ -1,0 +1,248 @@
+10-21-2022 @ 18:13:02 - DoCapture Response: Array
+(
+    [headers] => Requests_Utility_CaseInsensitiveDictionary Object
+        (
+            [data:protected] => Array
+                (
+                    [date] => Fri, 21 Oct 2022 18:13:02 GMT
+                    [content-type] => application/json;charset=UTF-8
+                    [x-content-type-options] => nosniff
+                    [x-xss-protection] => 1; mode=block
+                    [cache-control] => no-cache, no-store, max-age=0, must-revalidate
+                    [pragma] => no-cache
+                    [expires] => 0
+                    [x-frame-options] => DENY
+                )
+
+        )
+
+    [body] => {"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":16522,"scope":"openid"}
+    [response] => Array
+        (
+            [code] => 200
+            [message] => OK
+        )
+
+    [cookies] => Array
+        (
+        )
+
+    [filename] => 
+    [http_response] => WP_HTTP_Requests_Response Object
+        (
+            [data] => 
+            [headers] => 
+            [status] => 
+            [response:protected] => Requests_Response Object
+                (
+                    [body] => {"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":16522,"scope":"openid"}
+                    [raw] => HTTP/1.1 200 
+Date: Fri, 21 Oct 2022 18:13:02 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: close
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+
+{"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":16522,"scope":"openid"}
+                    [headers] => Requests_Response_Headers Object
+                        (
+                            [data:protected] => Array
+                                (
+                                    [date] => Array
+                                        (
+                                            [0] => Fri, 21 Oct 2022 18:13:02 GMT
+                                        )
+
+                                    [content-type] => Array
+                                        (
+                                            [0] => application/json;charset=UTF-8
+                                        )
+
+                                    [x-content-type-options] => Array
+                                        (
+                                            [0] => nosniff
+                                        )
+
+                                    [x-xss-protection] => Array
+                                        (
+                                            [0] => 1; mode=block
+                                        )
+
+                                    [cache-control] => Array
+                                        (
+                                            [0] => no-cache, no-store, max-age=0, must-revalidate
+                                        )
+
+                                    [pragma] => Array
+                                        (
+                                            [0] => no-cache
+                                        )
+
+                                    [expires] => Array
+                                        (
+                                            [0] => 0
+                                        )
+
+                                    [x-frame-options] => Array
+                                        (
+                                            [0] => DENY
+                                        )
+
+                                )
+
+                        )
+
+                    [status_code] => 200
+                    [protocol_version] => 1.1
+                    [success] => 1
+                    [redirects] => 0
+                    [url] => https://api.paytomorrow.com/api/uaa/oauth/token
+                    [history] => Array
+                        (
+                        )
+
+                    [cookies] => Requests_Cookie_Jar Object
+                        (
+                            [cookies:protected] => Array
+                                (
+                                )
+
+                        )
+
+                )
+
+            [filename:protected] => 
+        )
+
+)
+
+10-21-2022 @ 18:13:02 - Generating payment form for order 3224. Notify URL: https://cura360.com/blog/wc-api/WC_Gateway_Paytomorrow/
+10-21-2022 @ 18:28:09 - DoCapture Response: Array
+(
+    [headers] => Requests_Utility_CaseInsensitiveDictionary Object
+        (
+            [data:protected] => Array
+                (
+                    [date] => Fri, 21 Oct 2022 18:28:09 GMT
+                    [content-type] => application/json;charset=UTF-8
+                    [x-content-type-options] => nosniff
+                    [x-xss-protection] => 1; mode=block
+                    [cache-control] => no-cache, no-store, max-age=0, must-revalidate
+                    [pragma] => no-cache
+                    [expires] => 0
+                    [x-frame-options] => DENY
+                )
+
+        )
+
+    [body] => {"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":15614,"scope":"openid"}
+    [response] => Array
+        (
+            [code] => 200
+            [message] => OK
+        )
+
+    [cookies] => Array
+        (
+        )
+
+    [filename] => 
+    [http_response] => WP_HTTP_Requests_Response Object
+        (
+            [data] => 
+            [headers] => 
+            [status] => 
+            [response:protected] => Requests_Response Object
+                (
+                    [body] => {"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":15614,"scope":"openid"}
+                    [raw] => HTTP/1.1 200 
+Date: Fri, 21 Oct 2022 18:28:09 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: close
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+
+{"access_token":"ab2dd0b9-2774-4b54-9ef9-49402eae8a36","token_type":"bearer","refresh_token":"39c6d00f-75fe-4c76-87a6-5510eeb71ffc","expires_in":15614,"scope":"openid"}
+                    [headers] => Requests_Response_Headers Object
+                        (
+                            [data:protected] => Array
+                                (
+                                    [date] => Array
+                                        (
+                                            [0] => Fri, 21 Oct 2022 18:28:09 GMT
+                                        )
+
+                                    [content-type] => Array
+                                        (
+                                            [0] => application/json;charset=UTF-8
+                                        )
+
+                                    [x-content-type-options] => Array
+                                        (
+                                            [0] => nosniff
+                                        )
+
+                                    [x-xss-protection] => Array
+                                        (
+                                            [0] => 1; mode=block
+                                        )
+
+                                    [cache-control] => Array
+                                        (
+                                            [0] => no-cache, no-store, max-age=0, must-revalidate
+                                        )
+
+                                    [pragma] => Array
+                                        (
+                                            [0] => no-cache
+                                        )
+
+                                    [expires] => Array
+                                        (
+                                            [0] => 0
+                                        )
+
+                                    [x-frame-options] => Array
+                                        (
+                                            [0] => DENY
+                                        )
+
+                                )
+
+                        )
+
+                    [status_code] => 200
+                    [protocol_version] => 1.1
+                    [success] => 1
+                    [redirects] => 0
+                    [url] => https://api.paytomorrow.com/api/uaa/oauth/token
+                    [history] => Array
+                        (
+                        )
+
+                    [cookies] => Requests_Cookie_Jar Object
+                        (
+                            [cookies:protected] => Array
+                                (
+                                )
+
+                        )
+
+                )
+
+            [filename:protected] => 
+        )
+
+)
+
+10-21-2022 @ 18:28:09 - Generating payment form for order 3224. Notify URL: https://cura360.com/blog/wc-api/WC_Gateway_Paytomorrow/

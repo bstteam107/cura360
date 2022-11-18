@@ -1,0 +1,315 @@
+<?php
+
+
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use Cart;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
+use Webkul\Checkout\Contracts\Cart as CartModel;
+use Webkul\Customer\Repositories\WishlistRepository;
+use Webkul\Product\Repositories\ProductRepository;
+use Illuminate\Routing\Route;
+use DB;
+class CartController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \Webkul\Customer\Repositories\CartItemRepository  $wishlistRepository
+     * @param  \Webkul\Product\Repositories\ProductRepository  $productRepository
+     * @return void
+     */
+    public function __construct(
+        protected WishlistRepository $wishlistRepository,
+        protected ProductRepository $productRepository
+    )
+    {
+        $this->middleware('throttle:5,1')->only('applyCoupon');
+
+        $this->middleware('customer')->only('moveToWishlist');
+
+       // parent::__construct();
+    }
+
+    /**
+     * Method to populate the cart page which will be populated before the checkout process.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        Cart::collectTotals();
+
+        return view($this->_config['view'])->with('cart', Cart::getCart());
+    }
+
+    /**
+     * Function for guests user to add the product in the cart.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function add($id)
+    {
+		
+        try {
+            Cart::deactivateCurrentCartIfBuyNowIsActive();
+			 $result = Cart::addProduct($id, request()->all());
+			    $cart_id = $result->id;
+			  if(request()->input('customoptions') > 0){
+				
+				$options  = request()->input('selectedOption'); 
+				if(!empty($options)){
+				$option_total =0 ;
+				foreach($options as $key){
+					if(!empty($key)){
+					$optionItem = \DB::table('product_options_item')->where('id', '=', $key)->first();
+					$option = \DB::table('product_options')->where('id', '=', $optionItem->option_id)->first();
+					
+					$optionitemdata = array(
+						"cart_id" =>$cart_id, 
+						"product_id"=>$id,
+						"opt_id"=>$optionItem->option_id,
+						"option_id" =>$key, 
+						"option" =>$option->title, 
+						"option_item" =>$optionItem->itemtitle, 
+						"price" =>$optionItem->itemprice,
+						"sku" =>$optionItem->itemsku
+					);
+					$option_total = $option_total + $optionItem->itemprice;
+					$existoption = DB::table('cart_item_options')->where('cart_id', '=', $cart_id)->where('opt_id', '=', $optionItem->option_id)->get();
+					if($existoption->count() > 0){
+					DB::table('cart_item_options')->where(['cart_id'=>$cart_id,'opt_id'=>$optionItem->option_id])->limit(1)->update($optionitemdata);					
+					}
+					else{
+					DB::table('cart_item_options')->insertGetId($optionitemdata);
+					}
+					}
+				}
+				/*$cart_items = DB::table('cart_items')->where('cart_id', '=', $cart_id)->where('product_id', '=', $id)->first();
+				$quantity = request()->input('quantity') * $option_total;
+				$price = $cart_items->price + $quantity;
+				$base_price = $cart_items->base_price + $quantity;
+				$cartitemdata = array(
+						'price'             => $price,
+						'base_price'        => $base_price,
+						'total'             => $price * $cart_items->quantity,
+						'base_total'        => $base_price * $cart_items->quantity,
+                );
+				DB::table('cart_items')->where(['cart_id'=>$cart_id,'product_id'=>$id])->limit(1)->update($cartitemdata);
+				$cartpricedata = array(
+						'grand_total'             => $price * $cart_items->quantity,
+						'base_grand_total'        => $base_price * $cart_items->quantity,
+						'sub_total'               => $price * $cart_items->quantity,
+						'base_sub_total'          => $base_price * $cart_items->quantity,
+                );
+				DB::table('cart')->where(['id'=>$cart_id])->limit(1)->update($cartpricedata);
+				$cart = Cart::getCart();
+				Event::dispatch('checkout.cart.collect.totals.before', $cart);
+				 
+				 $cart->grand_total = $price * $cart_items->quantity;
+				 $cart->base_grand_total = $base_price * $cart_items->quantity;
+				 $cart->sub_total = $price * $cart_items->quantity;
+				 $cart->base_sub_total = $base_price * $cart_items->quantity;
+				 
+				 $cart->save();
+					
+                Event::dispatch('checkout.cart.collect.totals.after', $cart);*/
+				
+				
+				
+			  }
+			  else{
+				  session()->flash('warning', 'Please select required options!!');
+				  return redirect()->back();
+			  }	
+			 }
+			
+            if ($this->onFailureAddingToCart($result)) {
+                return redirect()->back();
+            }
+
+            if ($result instanceof CartModel) {
+                session()->flash('success', __('shop::app.checkout.cart.item.success'));
+
+                if ($customer = auth()->guard('customer')->user()) {
+                    $this->wishlistRepository->deleteWhere(['product_id' => $id, 'customer_id' => $customer->id]);
+                }
+
+                if (request()->get('is_buy_now')) {
+                    Event::dispatch('shop.item.buy-now', $id);
+
+                    return redirect()->route('shop.checkout.onepage.index');
+                }
+            }
+        } catch (\Exception $e) {
+            session()->flash('warning', __($e->getMessage()));
+
+            $product = $this->productRepository->find($id);
+
+            Log::error(
+                'Shop CartController: ' . $e->getMessage(),
+                ['product_id' => $id, 'cart_id' => cart()->getCart() ?? 0]
+            );
+
+            return redirect()->route('shop.productOrCategory.index', $product->url_key);
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Removes the item from the cart if it exists.
+     *
+     * @param  int  $itemId
+     * @return \Illuminate\Http\Response
+     */
+    public function remove($itemId)
+    {
+       $cart = \DB::table('cart_items')->where('id', '=', $itemId)->first();
+	   $result = Cart::removeItem($itemId);
+
+        if ($result) {
+			
+			DB::table('cart_item_options')->where('cart_id',$cart->cart_id)->where('product_id',$cart->product_id)->delete();
+			
+            session()->flash('success', trans('shop::app.checkout.cart.item.success-remove'));
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Removes the item from the cart if it exists.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function removeAllItems()
+    {
+        $result = Cart::removeAllItems();
+
+        if ($result) {
+            session()->flash('success', trans('shop::app.checkout.cart.item.success-all-remove'));
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Updates the quantity of the items present in the cart.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateBeforeCheckout()
+    {
+		
+		//print_r(request()->all());die();
+        try {
+            $result = Cart::updateItems(request()->all());
+
+            if ($result) {
+                session()->flash('success', trans('shop::app.checkout.cart.quantity.success'));
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', trans($e->getMessage()));
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Function to move a already added product to wishlist will run only on customer authentication.
+     *
+     * @param  int  $id
+     * @return mixed
+     */
+    public function moveToWishlist($id)
+    {
+        $result = Cart::moveToWishlist($id);
+
+        if ($result) {
+            session()->flash('success', trans('shop::app.checkout.cart.move-to-wishlist-success'));
+        } else {
+            session()->flash('warning', trans('shop::app.checkout.cart.move-to-wishlist-error'));
+        }
+
+        return request()->get('redirect') !== false
+            ? redirect()->back()
+            : response()->json([]);
+    }
+
+    /**
+     * Apply coupon to the cart.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function applyCoupon()
+    {
+        $couponCode = request()->get('code');
+
+        try {
+            if (strlen($couponCode)) {
+                Cart::setCouponCode($couponCode)->collectTotals();
+
+                if (Cart::getCart()->coupon_code == $couponCode) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => trans('shop::app.checkout.total.success-coupon'),
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => trans('shop::app.checkout.total.invalid-coupon'),
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => trans('shop::app.checkout.total.coupon-apply-issue'),
+            ]);
+        }
+    }
+
+    /**
+     * Remove applied coupon from the cart.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function removeCoupon()
+    {
+        Cart::removeCouponCode()->collectTotals();
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('shop::app.checkout.total.remove-coupon'),
+        ]);
+    }
+
+    /**
+     * Returns true, if result of adding product to cart
+     * is an array and contains a key "warning" or "info".
+     *
+     * @param  array  $result
+     * @return boolean
+     */
+    private function onFailureAddingToCart($result): bool
+    {
+        if (is_array($result) && isset($result['warning'])) {
+            session()->flash('warning', $result['warning']);
+            return true;
+        }
+
+        if (is_array($result) && isset($result['info'])) {
+            session()->flash('info', $result['info']);
+            return true;
+        }
+
+        return false;
+    }
+}

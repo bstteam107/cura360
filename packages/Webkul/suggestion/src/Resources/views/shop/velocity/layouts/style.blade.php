@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="{{ asset('vendor/webkul/suggestion/assets/css/suggestion.css') }}">

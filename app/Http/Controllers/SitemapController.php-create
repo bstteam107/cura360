@@ -1,0 +1,67 @@
+<?php
+  
+namespace App\Http\Controllers;
+  
+use Illuminate\Http\Request;
+use DB;
+  
+class SitemapController extends Controller
+{
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function index($value='')
+    {
+	//	echo 'testing';die();
+        //$posts = Post::latest()->get();
+		$categorys = DB::table('category_translations')->get(); //url_path
+		$products = DB::table('product_flat')->get(); //url_key
+		
+		
+		
+       // return response()->view('sitemap', [ 'categorys' => $categorys ])->header('Content-Type', 'text/xml');
+	   error_reporting(0);
+$xmlString = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>'.$_SERVER["DOCUMENT_ROOT"].'</loc>
+    </url>';
+	//$this->db->limit(10);
+	$list = $this->db->get('in_category')->result_array();
+	header("Content-type: text/xml");
+	foreach ($categorys as $category => $value){
+	$journalNames = $value->url_path;	
+    $xmlString .=  '<url>';
+    $xmlString .=  '<loc>'.$_SERVER["DOCUMENT_ROOT"].'/'.$journalNames.'</loc>';
+	$xmlString .=  '</url>';
+    } 
+	foreach ($products as $product => $value1){
+	$journalName = $value1->url_key;	
+    $xmlString .=  '<url>';
+    $xmlString .=  '<loc>'.$_SERVER["DOCUMENT_ROOT"].'/'.$journalName.'</loc>';
+	$xmlString .=  '</url>';
+    } 
+	$xmlString .= '</urlset>';
+	echo $xmlString;exit;
+	$dom = new DOMDocument;
+
+	$dom->preserveWhiteSpace = FALSE;
+	$dom->loadXML($xmlString);
+	if($dom->save($_SERVER["DOCUMENT_ROOT"].'/public/sitemap.xml')){
+		echo "<h2>Site Map Created SuccessFully</h2>";
+	}else{
+		echo "<h2>Site Map Created Failed</h2>";
+	}
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+    }
+}

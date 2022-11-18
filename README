@@ -1,0 +1,50 @@
+Python Distribution
+===================
+
+Most subdirectories have a README or INDEX files explaining the
+contents.
+
+src/		Python source (C core and Python librarys) for most platforms
+doc/		Documentation (PostScript, LaTeX, HTML, ...)
+contrib/	Contributed software
+mac/		Apple Macintosh specific files
+(See http://www.python.org/windows for the core of the win32 Python universe.)
+pc/		DOS, Windows 3.1(1), OS/2 specific files
+win32/		Windows NT specific files (see also wpy/ and pythonwin/)
+nt/		Same directory as 'win32' - see just above
+binaries-1.5/	UNIX binaries (not as current as you'd like :-( )
+binaries-1.4/	Older UNIX binaries
+binaries-1.3/	Older UNIX binaries
+binaries-1.2/   Older UNIX binaries
+binaries-1.1/	Older UNIX binaries
+mail/		Old mailing list archives - 1992 -> April 1995
+		(See http://www.python.org/locator/ for search of
+		mailing list traffic from 1995 to the present.)
+misc/		Miscellaneous
+pythonwin/	Windows NT distribution from Mark Hammond
+wpy/		Portable GUI library (NT, Win32s and Unix/X/Tk)
+vms/		VMS specific files
+
+Extensions (may be combined):
+
+.gz		compressed with "gzip".
+.tar		UNIX tar file
+.exe		DOS or Windows executable
+.shar		self-unpacking UNIX shell archive
+.hqx		Mac BinHex 4.0
+.sit		StuffIt Light(TM) Mac archive
+.sea		StuffIt Light(TM) self-extracting Mac archive
+.bin		MacBinary format
+.html		HyperText Mark-up Language (WWW)
+.el		Emacs Lisp
+.ps		PostScript
+.lect		Lectern display format
+.zip		DOS zip archive
+
+.tgz		== .tar.gz
+
+You can force the ftp server to deliver gzipped versions of files,
+and/or tar directories, by adding the appropriate suffix to the name
+of the actual file you're fetching.  Eg, 'get README.gz' will get a
+gzipped version of this file, and 'get misc.tar.gz' will fetch a
+gzipped tar archive of the misc subdir.

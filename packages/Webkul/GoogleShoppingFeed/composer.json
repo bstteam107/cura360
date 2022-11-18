@@ -1,0 +1,30 @@
+{
+    "name": "bagisto/laravel-google-shopping-feed",
+    "description": "Goolge shopping feed the products of bagisto shop",
+    "type": "add-on",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohammad Asif",
+            "email": "mohdasif.woocommerce337@webkul.com"
+        }
+    ],
+
+    "require": {
+        "google/apiclient": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webkul\\GoogleShoppingFeed\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\GoogleShoppingFeed\\Providers\\GShoppingFeedServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

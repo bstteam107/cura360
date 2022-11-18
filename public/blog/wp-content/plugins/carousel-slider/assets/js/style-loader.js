@@ -1,0 +1,1 @@
+(()=>{if(window.carouselSliderCssUrl){if(!document.querySelector("#carousel-slider-frontend-css")){let e=document.createElement("link");e.id="carousel-slider-frontend-css",e.rel="stylesheet",e.media="all",e.href=window.carouselSliderCssUrl,document.head.append(e)}}})();
